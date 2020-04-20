@@ -1,0 +1,33 @@
+{% extends "webshop/base.html" %}
+
+{% block title %}
+    Ordre
+{% endblock %}
+
+{% block content %}
+    <h1>Ordre</h1>
+
+    <div class="order-info">
+        <h3>Din ordre</h3>
+        <ul>
+            {% for item in cart %}
+                <li>
+                    {{ item.quantity }} x {{ item.product.title }}
+                    <span>{{ item.total_price }} kr.</span>
+                </li>
+            {% endfor %}
+
+            {% if cart.get_total_discount < 0 %}
+                <br>
+                <li>Rabat<span>{{ cart.get_total_discount }} kr.</span></li>
+            {% endif %}
+        </ul>
+        <p>Total: {{ cart.get_total_price }} kr.</p>
+    </div>
+
+    <form method="post" class="order-form">
+        {{ form.as_p }}
+        <p><input type="submit" value="Gem ordre"></p>
+        {% csrf_token %}
+    </form>
+{% endblock %}

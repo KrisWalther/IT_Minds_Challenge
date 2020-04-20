@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %}Kris' Webshop{% endblock %}</title>
+        <link href="{% static "css/base.css" %}" rel="stylesheet">
+    </head>
+    <body>
+        <div id="header">
+           <a href="/" class="logo">Kris' Webshop</a>
+        </div>
+        <div id="subheader">
+            <h4> Udsalg: 50 % rabat på alle køb ud over første vare.</h4>
+            <div class="cart">
+                {% with total_items=cart|length %}
+                    {% if total_items == 1 %}
+                        Din indkøbskurv:
+                        <a href="{% url "cart:cart_detail" %}">
+                            {{ total_items }} vare,
+                            {{ cart.get_total_price }} kr.
+                        </a>
+                    {% elif total_items > 1 %}
+                        Din indkøbskurv:
+                        <a href="{% url "cart:cart_detail" %}">    
+                            {{ total_items }} varer,
+                            {{ cart.get_total_price }} kr.
+                        </a>
+                    {% else %}
+                        Din indkøbskurv er tom
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html> 

@@ -1,0 +1,69 @@
+{% extends "webshop/base.html" %}
+{% load static %}
+
+{% block title %}
+Din indkøbskurv
+{% endblock %}
+
+{% block content %}
+    <h1>Din indkøbskurv</h1>
+    <table class="cart">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Produkt</th>
+                <th>Antal</th>
+                <th>Fjern</th>
+                <th>Pris pr. stk.</th>
+                <th>Samlet pris</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+                {% with product=item.product %}
+                    <tr>
+                        <td>
+                            <a href="{{ product.get_absolute_url }}">
+                                <img src="{% if product.image %}{{ product.image.url}}{% else %}{% static "img/no_image.png" %}{% endif %}">
+                            </a>
+                        </td>
+                        <td href="{{ product.get_absolute_url }}">{{ product.title }}</td>
+                        <td>
+                            <form action="{% url "cart:cart_add" product.id %}" method="post">
+                                {{ item.update_quantity_form.quantity }}
+                                {{ item.update_quantity_form.override }}
+                                <input type="submit" value="Opdater">
+                                {% csrf_token %}
+                            </form>
+                        </td>
+                        <td>
+                            <form action="{% url "cart:cart_remove" product.id %}" method="post">
+                            <input type="submit" value="Fjern">
+                            {% csrf_token %}
+                            </form>
+                        </td>
+                        <td class="num">{{ item.price }} kr.</td>
+                        <td class="num">{{ item.total_price }} kr.</td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+            {% if cart.get_total_discount < 0 %}
+                <tr class="discount">
+                    <td colspan="1"></td>
+                    <td>Rabat</td>
+                    <td colspan="3"></td>
+                    <td class="num">{{ cart.get_total_discount }} kr.</td>
+                </tr>
+            {% endif %}
+            <tr class="total">
+                <td>Total</td>
+                <td colspan="4"></td>
+                <td class="num">{{ cart.get_total_price }} kr.</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="text-right">
+        <a href="{% url "core:product_list" %}" class="button light">Fortsæt med at handle</a>
+        <a href="{% url "orders:order_create" %}" class="button">Gem ordre</a>
+    </p>
+{% endblock %}
