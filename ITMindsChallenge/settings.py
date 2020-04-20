@@ -123,6 +123,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATICFILES_DIRS = ( os.path.join(BASE_DIR, 'static/'), )
+
 STATIC_URL = '/static/' # Static borrowed from https://github.com/PacktPublishing/Django-3-by-Example/tree/master/Chapter07/myshop/shop/static
 
 MEDIA_URL = '/media/' 
